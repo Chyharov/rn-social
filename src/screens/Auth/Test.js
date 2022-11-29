@@ -1,98 +1,78 @@
 import React, { useState } from "react";
 import {
   StyleSheet,
-  Text,
   View,
-  ImageBackground,
   TextInput,
-  TouchableOpacity,
+  TouchableWithoutFeedback,
   Platform,
   Keyboard,
-  TouchableWithoutFeedback,
+  TouchableOpacity,
+  Text,
+  ImageBackground,
 } from "react-native";
-
-const initialState = {
-  email: "",
-  password: "",
-};
+import photo from "../../assets/images/Photo-BG.jpg";
 
 export default function App() {
-  console.log(Platform.OS);
-  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-  const [state, setstate] = useState(initialState);
   const [isActiveEmail, setIsActiveEmail] = useState(false);
   const [isActivePassword, setIsActivePassword] = useState(false);
-
-  const keyboardHide = () => {
-    setIsShowKeyboard(false);
-    Keyboard.dismiss();
-    console.log(state);
-    setstate(initialState);
-  };
+  const [showKeyboard, setShowKeyboard] = useState(false);
 
   return (
-    <TouchableWithoutFeedback onPress={keyboardHide}>
+    <TouchableWithoutFeedback
+      onPress={() => {
+        setShowKeyboard(false);
+        Keyboard.dismiss();
+      }}
+    >
       <View style={styles.container}>
-        <ImageBackground
-          style={styles.image}
-          source={require("../../assets/images/Photo-BG.jpg")}
-        >
+        <ImageBackground source={photo} style={styles.background}>
           <View
             style={{
               ...styles.form,
-              paddingBottom:
-                Platform.OS == "android" && setIsShowKeyboard ? 0 : 144,
+              paddingBottom: Platform.OS == "android" && showKeyboard ? 0 : 144,
             }}
           >
-            <Text style={styles.headerTitle}>Войти</Text>
+            <Text style={styles.title}>Войти</Text>
             <TextInput
-              style={isActiveEmail ? styles.activeInput : styles.input}
               placeholder="Адрес электронной почты"
               placeholderTextColor="#BDBDBD"
               selectionColor="#212121"
               onBlur={() => setIsActiveEmail(false)}
               onFocus={() => {
-                setIsShowKeyboard(true);
                 setIsActiveEmail(true);
+                setShowKeyboard(true);
               }}
-              value={state.email}
-              onChangeText={(value) =>
-                setstate((prevState) => ({ ...prevState, email: value }))
-              }
+              style={isActiveEmail ? styles.activeInput : styles.input}
             />
             <View
               style={{
                 ...styles.lastInput,
                 marginBottom:
-                  Platform.OS == "android" && setIsShowKeyboard ? 32 : 43,
+                  Platform.OS == "android" && showKeyboard ? 32 : 43,
               }}
             >
               <TextInput
-                style={
-                  isActivePassword
-                    ? {
-                        ...styles.activeInput,
-                        marginBottom:
-                          Platform.OS == "ios" && isShowKeyboard ? 100 : 0,
-                      }
-                    : {
-                        ...styles.input,
-                        marginBottom:
-                          Platform.OS == "ios" && isShowKeyboard ? 100 : 0,
-                      }
-                }
                 placeholder="Пароль"
                 placeholderTextColor="#BDBDBD"
                 selectionColor="#212121"
                 secureTextEntry={true}
                 onBlur={() => setIsActivePassword(false)}
                 onFocus={() => {
-                  setIsShowKeyboard(true);
                   setIsActivePassword(true);
+                  setShowKeyboard(true);
                 }}
-                value={state.password}
-                onChangeText={(value) =>
-                  setstate((prevState) => ({ ...prevState, password: value }))
+                style={
+                  isActivePassword
+                    ? {
+                        ...styles.activeInput,
+                        marginBottom:
+                          Platform.OS == "ios" && showKeyboard ? 100 : 0,
+                      }
+                    : {
+                        ...styles.input,
+                        marginBottom:
+                          Platform.OS == "ios" && showKeyboard ? 100 : 0,
+                      }
                 }
               />
               <TouchableOpacity activeOpacity={0.8} style={styles.lastInputBtn}>
@@ -102,13 +82,13 @@ export default function App() {
             <View
               style={{
                 display:
-                  Platform.OS == "android" && isShowKeyboard ? "none" : "flex",
+                  Platform.OS == "android" && showKeyboard ? "none" : "flex",
               }}
             >
               <TouchableOpacity
                 activeOpacity={0.8}
                 style={styles.btn}
-                // onPress={keyboardHide}
+                // onPress={loginHandler}
               >
                 <Text style={styles.btnTitle}>Войти</Text>
               </TouchableOpacity>
@@ -130,14 +110,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  image: {
-    flex: 1,
-  },
+  background: { flex: 1 },
   form: {
     position: "absolute",
     bottom: 0,
     left: 0,
     width: "100%",
+    // alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#fff",
     paddingTop: 32,
@@ -145,17 +124,19 @@ const styles = StyleSheet.create({
     borderTopStartRadius: 25,
     borderTopEndRadius: 25,
   },
-  headerTitle: {
+  title: {
+    textAlign: "center",
     fontFamily: "Roboto-Medium",
     fontSize: 30,
     lineHeight: 35,
     letterSpacing: 0.01,
     color: "#212121",
-    textAlign: "center",
+
     marginBottom: 33,
   },
   input: {
     height: 50,
+
     backgroundColor: "#F6F6F6",
     color: "#212121",
     borderRadius: 8,
@@ -166,6 +147,7 @@ const styles = StyleSheet.create({
   },
   activeInput: {
     height: 50,
+
     backgroundColor: "#FFF",
     color: "#212121",
     borderRadius: 8,

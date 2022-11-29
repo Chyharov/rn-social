@@ -25,6 +25,8 @@ export default function App() {
   const [dimensions, setdimensions] = useState(
     Dimensions.get("window").width - 16 * 2
   );
+  const [isActiveEmail, setIsActiveEmail] = useState(false);
+  const [isActivePassword, setIsActivePassword] = useState(false);
 
   useEffect(() => {
     const onChange = () => {
@@ -58,7 +60,7 @@ export default function App() {
             <View
               style={{
                 ...styles.form,
-                marginBottom: isShowKeyboard ? 16 : 150,
+                marginBottom: isShowKeyboard ? 32 : 150,
                 width: dimensions,
               }}
             >
@@ -67,11 +69,15 @@ export default function App() {
               </View>
               <View>
                 <TextInput
-                  style={styles.input}
+                  style={isActiveEmail ? styles.activeInput : styles.input}
                   placeholder="Адрес электронной почты"
                   placeholderTextColor="#BDBDBD"
                   selectionColor="#212121"
-                  onFocus={() => setIsShowKeyboard(true)}
+                  onBlur={() => setIsActiveEmail(false)}
+                  onFocus={() => {
+                    setIsShowKeyboard(true);
+                    setIsActiveEmail(true);
+                  }}
                   value={state.email}
                   onChangeText={(value) =>
                     setstate((prevState) => ({ ...prevState, email: value }))
@@ -80,12 +86,28 @@ export default function App() {
               </View>
               <View style={{ marginTop: 20 }}>
                 <TextInput
-                  style={styles.input}
+                  style={
+                    isActivePassword
+                      ? {
+                          ...styles.activeInput,
+                          marginBottom:
+                            Platform.OS == "ios" && isShowKeyboard ? 100 : 0,
+                        }
+                      : {
+                          ...styles.input,
+                          marginBottom:
+                            Platform.OS == "ios" && isShowKeyboard ? 100 : 0,
+                        }
+                  }
                   placeholder="Пароль"
                   placeholderTextColor="#BDBDBD"
                   selectionColor="#212121"
                   secureTextEntry={true}
-                  onFocus={() => setIsShowKeyboard(true)}
+                  onBlur={() => setIsActivePassword(false)}
+                  onFocus={() => {
+                    setIsShowKeyboard(true);
+                    setIsActivePassword(true);
+                  }}
                   value={state.password}
                   onChangeText={(value) =>
                     setstate((prevState) => ({ ...prevState, password: value }))
@@ -99,6 +121,12 @@ export default function App() {
               >
                 <Text style={styles.btnTitle}>Войти</Text>
               </TouchableOpacity>
+              <View style={styles.wrapper}>
+                <Text style={styles.link}>Нет аккаунта? </Text>
+                <TouchableOpacity activeOpacity={0.7}>
+                  <Text style={styles.link}>Зарегистрироваться</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </KeyboardAvoidingView>
         </ImageBackground>
@@ -119,14 +147,36 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   input: {
+    height: 50,
+    backgroundColor: "#F6F6F6",
+    color: "#212121",
+    borderRadius: 8,
     borderWidth: 1,
-    borderColor: "#f0f8ff",
-    height: 40,
-    borderRadius: 6,
-    color: "#f0f8ff",
+    borderColor: "#E8E8E8",
+    padding: 16,
+    marginBottom: 16,
+  },
+  activeInput: {
+    height: 50,
+    backgroundColor: "#FFF",
+    color: "#212121",
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#FF6C00",
+    padding: 16,
+    marginBottom: 16,
   },
   form: {
-    // marginHorizontal: 40,
+    // position: "absolute",
+    bottom: 0,
+    left: 0,
+    width: "100%",
+    justifyContent: "center",
+    backgroundColor: "#fff",
+    paddingTop: 32,
+    paddingHorizontal: 16,
+    borderTopStartRadius: 25,
+    borderTopEndRadius: 25,
   },
   inputTitle: {
     color: "#f0f8ff",
@@ -166,5 +216,20 @@ const styles = StyleSheet.create({
     letterSpacing: 0.01,
     color: "#212121",
     marginBottom: 33,
+  },
+  wrapper: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  link: {
+    fontFamily: "Roboto-Regular",
+    fontSize: 16,
+    lineHeight: 19,
+    color: "#1B4371",
+  },
+  lastInput: {
+    position: "relative",
   },
 });

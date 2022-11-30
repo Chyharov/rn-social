@@ -1,16 +1,17 @@
 import React, { useState } from "react";
+import {} from "react-native";
+
 import * as Font from "expo-font";
 import AppLoading from "expo-app-loading";
-import Main from "./src/components/Main";
+
+import LoginScreen from "./src/screens/Auth/LoginScreen";
+import RegistrationScreen from "./src/screens/Auth/RegistrationScreen";
 
 const loadFonts = async () => {
   await Font.loadAsync({
-    "Roboto-Regular": require("./src/assets/fonts/DMMono-Regular.ttf"),
-    "Roboto-Medium": require("./src/assets/fonts/DMMono-Regular.ttf"),
-    "Roboto-Bold": require("./src/assets/fonts/DMMono-Regular.ttf"),
-    // "Roboto-Regular": require("./src/assets/fonts/Roboto-Regular.ttf"),
-    // "Roboto-Medium": require("./src/assets/fonts/Roboto-Medium.ttf"),
-    // "Roboto-Bold": require("./src/assets/fonts/Roboto-Bold.ttf"),
+    "Roboto-Regular": require("./src/assets/fonts/Roboto-Regular.ttf"),
+    "Roboto-Medium": require("./src/assets/fonts/Roboto-Medium.ttf"),
+    "Roboto-Bold": require("./src/assets/fonts/Roboto-Bold.ttf"),
   });
 };
 
@@ -27,7 +28,7 @@ const App = () => {
     );
   }
 
-  return <Main />;
+  return <LoginScreen />;
 };
 
 export default App;

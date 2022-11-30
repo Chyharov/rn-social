@@ -41,12 +41,12 @@ export default function App() {
             style={{
               ...styles.form,
               paddingBottom:
-                Platform.OS == "android" && setIsShowKeyboard ? 0 : 144,
+                Platform.OS == "android" && isShowKeyboard ? 0 : 144,
             }}
           >
             <Text style={styles.headerTitle}>Войти</Text>
             <TextInput
-              style={isActiveEmail ? styles.activeInput : styles.input}
+              style={isActiveEmail ? styles.inputIsActive : styles.input}
               placeholder="Адрес электронной почты"
               placeholderTextColor="#BDBDBD"
               selectionColor="#212121"
@@ -64,14 +64,14 @@ export default function App() {
               style={{
                 ...styles.lastInput,
                 marginBottom:
-                  Platform.OS == "android" && setIsShowKeyboard ? 32 : 43,
+                  Platform.OS == "android" && isShowKeyboard ? 32 : 43,
               }}
             >
               <TextInput
                 style={
                   isActivePassword
                     ? {
-                        ...styles.activeInput,
+                        ...styles.inputIsActive,
                         marginBottom:
                           Platform.OS == "ios" && isShowKeyboard ? 100 : 0,
                       }
@@ -95,8 +95,8 @@ export default function App() {
                   setstate((prevState) => ({ ...prevState, password: value }))
                 }
               />
-              <TouchableOpacity activeOpacity={0.8} style={styles.lastInputBtn}>
-                <Text style={styles.lastInputText}>Показать</Text>
+              <TouchableOpacity activeOpacity={0.8} style={styles.btnShowHide}>
+                <Text style={styles.titleShowHide}>Показать</Text>
               </TouchableOpacity>
             </View>
             <View
@@ -113,9 +113,9 @@ export default function App() {
                 <Text style={styles.btnTitle}>Войти</Text>
               </TouchableOpacity>
               <View style={styles.wrapper}>
-                <Text style={styles.link}>Нет аккаунта? </Text>
+                <Text style={styles.authLink}>Нет аккаунта? </Text>
                 <TouchableOpacity activeOpacity={0.7}>
-                  <Text style={styles.link}>Зарегистрироваться</Text>
+                  <Text style={styles.authLink}>Зарегистрироваться</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 16,
   },
-  activeInput: {
+  inputIsActive: {
     height: 50,
     backgroundColor: "#FFF",
     color: "#212121",
@@ -177,12 +177,12 @@ const styles = StyleSheet.create({
   lastInput: {
     position: "relative",
   },
-  lastInputBtn: {
+  btnShowHide: {
     position: "absolute",
     right: 16,
     top: 16,
   },
-  lastInputText: {
+  titleShowHide: {
     fontFamily: "Roboto-Regular",
     fontSize: 16,
     lineHeight: 19,
@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  link: {
+  authLink: {
     fontFamily: "Roboto-Regular",
     fontSize: 16,
     lineHeight: 19,

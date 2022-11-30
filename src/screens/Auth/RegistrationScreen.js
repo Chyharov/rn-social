@@ -26,7 +26,6 @@ export default function RegistrationScreen() {
   const [isActiveLogin, setIsActiveLogin] = useState(false);
   const [isActiveEmail, setIsActiveEmail] = useState(false);
   const [isActivePassword, setIsActivePassword] = useState(false);
-  const [photo, setPhoto] = useState();
 
   const keyboardHide = () => {
     setIsShowKeyboard(false);
@@ -50,27 +49,14 @@ export default function RegistrationScreen() {
             }}
           >
             <View style={styles.photoBlock}>
-              {photo ? (
-                <>
-                  <Image source={{ uri: photo }} style={styles.img} />
-                  <AntDesign
-                    name="closecircleo"
-                    size={24}
-                    color="#BDBDBD"
-                    style={styles.btnLoad}
-                    onPress={deletePhoto}
-                  />
-                </>
-              ) : (
-                <View style={styles.img}>
-                  <AntDesign
-                    name="pluscircleo"
-                    size={24}
-                    color="#FF6C00"
-                    style={styles.btnLoad}
-                  />
-                </View>
-              )}
+              <View style={styles.img}>
+                <AntDesign
+                  name="pluscircleo"
+                  size={24}
+                  color="#FF6C00"
+                  style={styles.btnLoad}
+                />
+              </View>
             </View>
             <Text style={styles.headerTitle}>Регистрация</Text>
             <TextInput

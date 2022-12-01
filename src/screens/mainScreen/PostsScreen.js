@@ -11,7 +11,6 @@ import {
   Image,
   Platform,
 } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
 
 export default function PostsScreen({ navigation }) {
   return (

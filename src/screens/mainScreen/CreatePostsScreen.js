@@ -11,39 +11,41 @@ import {
   Image,
   Platform,
 } from "react-native";
+import { Camera } from "expo-camera";
 
 export default function CreatePostsScreen({ navigation }) {
-  const keyboardHide = () => {
-    setIsShowKeyboard(false);
-    Keyboard.dismiss();
-    console.log(state);
-    setstate(initialState);
-  };
-
   return (
-    <TouchableWithoutFeedback onPress={keyboardHide}>
-      <View style={styles.container}>
-        <Text style={styles.headerTitle}>CreatePostsScreen</Text>
-      </View>
-    </TouchableWithoutFeedback>
+    <View style={styles.container}>
+      <Camera style={styles.camera}>
+        <TouchableOpacity style={styles.snapContainer} onPress={() => {}}>
+          <Text style={styles.snap}>SNAP</Text>
+        </TouchableOpacity>
+      </Camera>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  camera: {
+    height: 300,
+    marginTop: 50,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#fff",
   },
-  headerTitle: {
-    textAlign: "center",
-    fontFamily: "Roboto-Medium",
-    fontSize: 30,
-    lineHeight: 35,
-    letterSpacing: 0.01,
-    color: "#000",
-    marginBottom: 33,
+  snap: {
+    color: "#fff",
   },
-  iconLogOut: {},
+  snapContainer: {
+    marginTop: 200,
+    borderWidth: 1,
+    borderColor: "#ff0000",
+    width: 70,
+    height: 70,
+    borderRadius: 50,
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });

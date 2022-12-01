@@ -16,6 +16,9 @@ import ProfileScreen from "./src/screens/mainScreen/ProfileScreen";
 import PostsScreen from "./src/screens/mainScreen/PostsScreen";
 import CreatePostsScreen from "./src/screens/mainScreen/CreatePostsScreen";
 
+import { AntDesign } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
+
 export const useRoute = (isAuth) => {
   if (!isAuth) {
     return (
@@ -34,19 +37,34 @@ export const useRoute = (isAuth) => {
     );
   }
   return (
-    <MainTab.Navigator>
+    <MainTab.Navigator tabBarOptions={{ showLabel: false }}>
       <MainTab.Screen
-        options={{ headerShown: false }}
+        options={{
+          tabBarIcon: ({ focused, size, color }) => (
+            <AntDesign name="appstore-o" size={size} color={color} />
+          ),
+          headerShown: false,
+        }}
         name="Posts"
         component={PostsScreen}
       />
       <MainTab.Screen
-        options={{ headerShown: false }}
+        options={{
+          tabBarIcon: ({ focused, size, color }) => (
+            <AntDesign name="pluscircleo" size={size} color={color} />
+          ),
+          headerShown: false,
+        }}
         name="Create"
         component={CreatePostsScreen}
       />
       <MainTab.Screen
-        options={{ headerShown: false }}
+        options={{
+          tabBarIcon: ({ focused, size, color }) => (
+            <Feather name="user" size={size} color={color} />
+          ),
+          headerShown: false,
+        }}
         name="Profile"
         component={ProfileScreen}
       />

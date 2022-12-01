@@ -11,12 +11,16 @@ import CreatePostsScreen from "../screens/mainScreen/CreatePostsScreen";
 
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 
 export default function useHome({ navigation }) {
   return (
     <MainTab.Navigator tabBarOptions={{ showLabel: false }}>
       <MainTab.Screen
+        name="Posts"
+        component={PostsScreen}
         options={{
+          tabBarHideOnKeyboard: true,
           tabBarIcon: ({ focused, size, color }) => (
             <Ionicons
               name="grid-outline"
@@ -25,10 +29,30 @@ export default function useHome({ navigation }) {
               color="rgba(33, 33, 33, 0.8)"
             />
           ),
-          headerShown: false,
+          title: "Публикации",
+          headerTitleAlign: "center",
+          headerStyle: {
+            borderBottomWidth: 1,
+            borderBottomColor: "rgba(0, 0, 0, 0.3)",
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontFamily: "Roboto-Medium",
+            fontSize: 17,
+            color: "#212121",
+          },
+          headerRight: () => (
+            <MaterialIcons
+              name="logout"
+              size={24}
+              color="#BDBDBD"
+              style={{ marginRight: 10 }}
+              onPress={() => {
+                navigation.navigate("Login");
+              }}
+            />
+          ),
         }}
-        name="Posts"
-        component={PostsScreen}
       />
 
       <MainTab.Screen

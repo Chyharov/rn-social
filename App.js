@@ -7,10 +7,19 @@ import AppLoading from "expo-app-loading";
 import LoginScreen from "./src/screens/auth/LoginScreen";
 import RegistrationScreen from "./src/screens/auth/RegistrationScreen";
 
+// import Home from "./src/screens/mainScreen/Home";
+// import CommentsScreen from "./src/screens/mainScreen/CommentsScreen";
+// import ProfileScreen from "./src/screens/mainScreen/ProfileScreen";
+// import MapScreen from "./src/screens/mainScreen/MapScreen";
+// import PostsScreen from "./src/screens/mainScreen/PostsScreen";
+// import CreatePostsScreen from "./src/screens/mainScreen/CreatePostsScreen";
+
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 const AuthStack = createStackNavigator();
+const MainTab = createBottomTabNavigator();
 
 const loadFonts = async () => {
   await Font.loadAsync({
@@ -48,6 +57,9 @@ const App = () => {
         />
       </AuthStack.Navigator>
     </NavigationContainer>
+    // <>
+    //   <Home />
+    // </>
   );
 };
 

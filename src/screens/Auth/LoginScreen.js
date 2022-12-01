@@ -110,6 +110,7 @@ export default function LoginScreen({ navigation }) {
                 activeOpacity={0.8}
                 style={styles.btn}
                 // onPress={keyboardHide}
+                onPress={() => navigation.navigate("Home")}
               >
                 <Text style={styles.btnTitle}>Войти</Text>
               </TouchableOpacity>

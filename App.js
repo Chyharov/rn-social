@@ -5,7 +5,13 @@ import * as Font from "expo-font";
 import AppLoading from "expo-app-loading";
 
 import { NavigationContainer } from "@react-navigation/native";
-import { useRoute } from "./router";
+import { createStackNavigator } from "@react-navigation/stack";
+
+const AuthStack = createStackNavigator();
+
+import LoginScreen from "./src/screens/auth/LoginScreen";
+import RegistrationScreen from "./src/screens/auth/RegistrationScreen";
+import Home from "./src/components/Home";
 
 const loadFonts = async () => {
   await Font.loadAsync({
@@ -17,7 +23,6 @@ const loadFonts = async () => {
 
 const App = () => {
   const [isReady, setIsReady] = useState(false);
-  const routing = useRoute({});
 
   if (!isReady) {
     return (
@@ -29,7 +34,27 @@ const App = () => {
     );
   }
 
-  return <NavigationContainer>{routing}</NavigationContainer>;
+  return (
+    <NavigationContainer>
+      <AuthStack.Navigator>
+        <AuthStack.Screen
+          options={{ headerShown: false }}
+          name="Login"
+          component={LoginScreen}
+        />
+        <AuthStack.Screen
+          options={{ headerShown: false }}
+          name="Registration"
+          component={RegistrationScreen}
+        />
+        <AuthStack.Screen
+          options={{ headerShown: false }}
+          name="Home"
+          component={Home}
+        />
+      </AuthStack.Navigator>
+    </NavigationContainer>
+  );
 };
 
 export default App;

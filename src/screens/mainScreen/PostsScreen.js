@@ -11,21 +11,13 @@ import {
   Image,
   Platform,
 } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
 
 export default function PostsScreen({ navigation }) {
-  const keyboardHide = () => {
-    setIsShowKeyboard(false);
-    Keyboard.dismiss();
-    console.log(state);
-    setstate(initialState);
-  };
-
   return (
-    <TouchableWithoutFeedback onPress={keyboardHide}>
-      <View style={styles.container}>
-        <Text style={styles.headerTitle}>PostsScreen</Text>
-      </View>
-    </TouchableWithoutFeedback>
+    <View style={styles.container}>
+      <Text style={styles.headerTitle}>PostsScreen</Text>
+    </View>
   );
 }
 
@@ -45,4 +37,5 @@ const styles = StyleSheet.create({
     color: "#ff00ff",
     marginBottom: 33,
   },
+  iconLogOut: {},
 });

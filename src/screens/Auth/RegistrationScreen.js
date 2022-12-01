@@ -19,8 +19,9 @@ const initialState = {
   password: "",
 };
 
-export default function RegistrationScreen() {
+export default function RegistrationScreen({ navigation }) {
   console.log(Platform.OS);
+  // console.log("navigation", navigation);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setstate] = useState(initialState);
   const [isActiveLogin, setIsActiveLogin] = useState(false);
@@ -145,7 +146,10 @@ export default function RegistrationScreen() {
               </TouchableOpacity>
               <View style={styles.wrapper}>
                 <Text style={styles.authLink}>Уже есть аккаунт? </Text>
-                <TouchableOpacity activeOpacity={0.7}>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  onPress={() => navigation.navigate("Login")}
+                >
                   <Text style={styles.authLink}>Войти</Text>
                 </TouchableOpacity>
               </View>

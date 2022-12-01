@@ -28,7 +28,7 @@ const App = () => {
     );
   }
 
-  return <RegistrationScreen />;
+  return <LoginScreen />;
 };
 
 export default App;

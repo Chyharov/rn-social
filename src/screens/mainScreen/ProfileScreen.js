@@ -23,12 +23,7 @@ export default function ProfileScreen({ navigation }) {
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
       <View style={styles.container}>
-        <ImageBackground
-          style={styles.image}
-          source={require("../../assets/images/Photo-BG.jpg")}
-        >
-          <Text style={styles.headerTitle}>ProfileScreen</Text>
-        </ImageBackground>
+        <Text style={styles.headerTitle}>ProfileScreen</Text>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -37,18 +32,17 @@ export default function ProfileScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  image: {
-    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#00ffff",
   },
   headerTitle: {
-    marginTop: 200,
     textAlign: "center",
     fontFamily: "Roboto-Medium",
     fontSize: 30,
     lineHeight: 35,
     letterSpacing: 0.01,
-    color: "#212121",
+    color: "#ff00ff",
     marginBottom: 33,
   },
 });

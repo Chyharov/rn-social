@@ -13,7 +13,7 @@ import ProfileScreen from "../screens/mainScreen/ProfileScreen";
 
 const MainTab = createBottomTabNavigator();
 
-export default function useHome({ navigation }) {
+export default function Home({ navigation }) {
   return (
     <MainTab.Navigator tabBarOptions={{ showLabel: false }}>
       <MainTab.Screen

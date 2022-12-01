@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#00ffff",
+    backgroundColor: "#fff",
   },
   headerTitle: {
     textAlign: "center",
@@ -42,7 +42,8 @@ const styles = StyleSheet.create({
     fontSize: 30,
     lineHeight: 35,
     letterSpacing: 0.01,
-    color: "#ff00ff",
+    color: "#000",
     marginBottom: 33,
   },
+  iconLogOut: {},
 });

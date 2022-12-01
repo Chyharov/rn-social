@@ -3,15 +3,15 @@ import { StyleSheet, View } from "react-native";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-const MainTab = createBottomTabNavigator();
-
-import ProfileScreen from "../screens/mainScreen/ProfileScreen";
-import PostsScreen from "../screens/mainScreen/PostsScreen";
-import CreatePostsScreen from "../screens/mainScreen/CreatePostsScreen";
-
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
+
+import PostsScreen from "../screens/mainScreen/PostsScreen";
+import CreatePostsScreen from "../screens/mainScreen/CreatePostsScreen";
+import ProfileScreen from "../screens/mainScreen/ProfileScreen";
+
+const MainTab = createBottomTabNavigator();
 
 export default function useHome({ navigation }) {
   return (
@@ -20,7 +20,6 @@ export default function useHome({ navigation }) {
         name="Posts"
         component={PostsScreen}
         options={{
-          tabBarHideOnKeyboard: true,
           tabBarIcon: ({ focused, size, color }) => (
             <Ionicons
               name="grid-outline"

@@ -1,41 +1,31 @@
-import React, { useState } from "react";
-import {
-  StyleSheet,
-  View,
-  TextInput,
-  TouchableWithoutFeedback,
-  Keyboard,
-  TouchableOpacity,
-  Text,
-  ImageBackground,
-  Image,
-  Platform,
-} from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
+import React from "react";
+import { createStackNavigator } from "@react-navigation/stack";
+import DefaultPostsScreen from "../nestedScreens/DefaultPostsScreen";
+import CommentsScreen from "../nestedScreens/CommentsScreen";
+import MapScreen from "../nestedScreens/MapScreen";
 
-export default function PostsScreen({ navigation }) {
+const NestedScreen = createStackNavigator();
+
+const PostsScreen = () => {
   return (
-    <View style={styles.container}>
-      <Text style={styles.headerTitle}>PostsScreen</Text>
-    </View>
+    <NestedScreen.Navigator>
+      <NestedScreen.Screen
+        name="DefaultScreen"
+        component={DefaultPostsScreen}
+        options={{ headerShown: false }}
+      />
+      <NestedScreen.Screen
+        name="Comments"
+        component={CommentsScreen}
+        options={{ headerShown: false }}
+      />
+      <NestedScreen.Screen
+        name="Map"
+        component={MapScreen}
+        options={{ headerShown: false }}
+      />
+    </NestedScreen.Navigator>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#fff",
-  },
-  headerTitle: {
-    textAlign: "center",
-    fontFamily: "Roboto-Medium",
-    fontSize: 30,
-    lineHeight: 35,
-    letterSpacing: 0.01,
-    color: "#000",
-    marginBottom: 33,
-  },
-  iconLogOut: {},
-});
+export default PostsScreen;

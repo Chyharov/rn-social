@@ -1,53 +1,31 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text, FlatList, Image } from "react-native";
+import React from "react";
+import { createStackNavigator } from "@react-navigation/stack";
+import DefaultPostsScreen from "../nestedScreens/DefaultPostsScreen";
+import CommentsScreen from "../nestedScreens/CommentsScreen";
+import MapScreen from "../nestedScreens/MapScreen";
 
-export default function PostsScreen({ route }) {
-  const [posts, setPosts] = useState([]);
-  console.log("route.params", route.params);
+const NestedScreen = createStackNavigator();
 
-  useEffect(() => {
-    if (route.params) {
-      setPosts((prevState) => [...prevState, route.params]);
-    }
-  }, [route.params]);
-  console.log("posts", posts);
+const PostsScreen = () => {
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={posts}
-        keyExtractor={(item, indx) => indx.toString()}
-        renderItem={({ item }) => (
-          <View
-            style={{
-              marginBottom: 10,
-              justifyContent: "center",
-              alignContent: "center",
-            }}
-          >
-            <Image
-              source={{ uri: item.photo }}
-              style={{ width: 350, height: 200 }}
-            />
-          </View>
-        )}
+    <NestedScreen.Navigator>
+      <NestedScreen.Screen
+        name="DefaultScreen"
+        component={DefaultPostsScreen}
+        options={{ headerShown: false }}
       />
-    </View>
+      <NestedScreen.Screen
+        name="Comments"
+        component={CommentsScreen}
+        options={{ headerShown: false }}
+      />
+      <NestedScreen.Screen
+        name="Map"
+        component={MapScreen}
+        options={{ headerShown: false }}
+      />
+    </NestedScreen.Navigator>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  headerTitle: {
-    textAlign: "center",
-    fontFamily: "Roboto-Medium",
-    fontSize: 30,
-    lineHeight: 35,
-    letterSpacing: 0.01,
-    color: "#000",
-    marginBottom: 33,
-  },
-});
+export default PostsScreen;

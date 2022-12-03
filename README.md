@@ -15,3 +15,4 @@ HW05
 ![Hw05CreateScreen](https://user-images.githubusercontent.com/102535915/205254611-bbd98681-5290-4c04-8b51-a2c178b98524.jpg)
 
 HW06
+![Hw06ReduxAndFirebase](https://user-images.githubusercontent.com/102535915/205425039-d5f02c6e-9746-4a27-88c0-6e7933db1d32.jpg)

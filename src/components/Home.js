@@ -1,21 +1,23 @@
-import React from "react";
-import { StyleSheet, View } from "react-native";
-
+import React, { useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-
+import { StyleSheet, View } from "react-native";
 import { Feather } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
 
-import PostsScreen from "../screens/mainScreen/PostsScreen";
-import CreatePostsScreen from "../screens/mainScreen/CreatePostsScreen";
-import ProfileScreen from "../screens/mainScreen/ProfileScreen";
+import PostsScreen from "../Screens/MainScreens/PostsScreen";
+import CreatePostsScreen from "../Screens/MainScreens/CreatePostsScreen";
+import ProfileScreen from "../Screens/MainScreens/ProfileScreen";
 
 const MainTab = createBottomTabNavigator();
 
-export default function Home({ navigation }) {
+const Home = ({ navigation }) => {
   return (
-    <MainTab.Navigator tabBarOptions={{ showLabel: false }}>
+    <MainTab.Navigator
+      screenOptions={{
+        tabBarShowLabel: false,
+      }}
+    >
       <MainTab.Screen
         name="Posts"
         component={PostsScreen}
@@ -28,7 +30,20 @@ export default function Home({ navigation }) {
               color="rgba(33, 33, 33, 0.8)"
             />
           ),
-          title: "Публикации",
+          headerShown: false,
+        }}
+      />
+      <MainTab.Screen
+        name="Create"
+        component={CreatePostsScreen}
+        options={{
+          tabBarHideOnKeyboard: true,
+          tabBarIcon: ({ focused, size, color }) => (
+            <View style={styles.iconAdd}>
+              <Ionicons name="add" size={24} color="#fff" />
+            </View>
+          ),
+          title: "Создать публикацию",
           headerTitleAlign: "center",
           headerStyle: {
             borderBottomWidth: 1,
@@ -40,35 +55,22 @@ export default function Home({ navigation }) {
             fontSize: 17,
             color: "#212121",
           },
-          headerRight: () => (
-            <MaterialIcons
-              name="logout"
+          headerLeft: () => (
+            <AntDesign
+              name="arrowleft"
+              style={{ marginLeft: 20 }}
               size={24}
-              color="#BDBDBD"
-              style={{ marginRight: 10 }}
+              color="black"
               onPress={() => {
-                navigation.navigate("Login");
+                navigation.navigate("Posts");
               }}
             />
           ),
         }}
       />
-
       <MainTab.Screen
-        options={{
-          tabBarHideOnKeyboard: true,
-          tabBarIcon: ({ focused, size, color }) => (
-            <View style={styles.iconCreatePostsScreen}>
-              <Ionicons name="add" size={24} color="#fff" />
-            </View>
-          ),
-          headerShown: false,
-        }}
-        name="Create"
-        component={CreatePostsScreen}
-      />
-
-      <MainTab.Screen
+        name="Profile"
+        component={ProfileScreen}
         options={{
           tabBarIcon: ({ focused, size, color }) => (
             <Feather
@@ -80,15 +82,15 @@ export default function Home({ navigation }) {
           ),
           headerShown: false,
         }}
-        name="Profile"
-        component={ProfileScreen}
       />
     </MainTab.Navigator>
   );
-}
+};
+
+export default Home;
 
 const styles = StyleSheet.create({
-  iconCreatePostsScreen: {
+  iconAdd: {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",

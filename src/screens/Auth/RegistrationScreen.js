@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   StyleSheet,
   View,
@@ -11,61 +12,157 @@ import {
   Image,
   Platform,
 } from "react-native";
+import DocumentPicker from "react-native-document-picker";
 import { AntDesign } from "@expo/vector-icons";
+import { registerUser } from "../../redux/auth/authOperations";
+import { getAuthError, getAuthLoading } from "../../redux/auth/authSelectors";
+import { changeError } from "../../redux/auth/authSlice";
+import Loader from "../../components/Loader";
 
-const initialState = {
-  login: "",
-  email: "",
-  password: "",
-};
-
-export default function RegistrationScreen({ navigation }) {
-  console.log(Platform.OS);
-  // console.log("navigation", navigation);
-  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-  const [state, setstate] = useState(initialState);
+const RegistrationScreen = ({ navigation }) => {
+  const [login, setLogin] = useState("");
   const [isActiveLogin, setIsActiveLogin] = useState(false);
+  const [email, setEmail] = useState("");
   const [isActiveEmail, setIsActiveEmail] = useState(false);
+  const [password, setPassword] = useState("");
   const [isActivePassword, setIsActivePassword] = useState(false);
+  const [showKeyboard, setShowKeyboard] = useState(false);
+  const [secure, setSecure] = useState(true);
+  const [secureText, setSecureText] = useState("Показать");
+  const [photo, setPhoto] = useState();
 
-  const keyboardHide = () => {
-    setIsShowKeyboard(false);
-    Keyboard.dismiss();
-    console.log(state);
-    setstate(initialState);
+  const dispatch = useDispatch();
+  const error = useSelector(getAuthError);
+  const isLoading = useSelector(getAuthLoading);
+
+  useEffect(() => {
+    if (!error) return;
+    alert(error);
+  }, [error]);
+
+  const loginHandler = (text) => setLogin(text);
+  const emailHandler = (text) => setEmail(text);
+  const passwordHandler = (text) => setPassword(text);
+  const reset = () => {
+    setLogin("");
+    setEmail("");
+    setPassword("");
+  };
+
+  const registerHandler = async () => {
+    if (!login || !email || !password) {
+      alert("Введите логин, адрес электронной почты и пароль");
+      return;
+    }
+    if (photo) {
+      const photoUrl = await uploadPhotoToServer();
+      dispatch(registerUser({ login, email, password, photo: photoUrl }));
+      reset();
+      return;
+    }
+    dispatch(registerUser({ login, email, password, photo }));
+    reset();
+  };
+
+  const uploadPhotoToServer = async () => {
+    const response = await fetch(photo);
+    const file = await response.blob();
+
+    const uniqueImageId = Date.now().toString();
+
+    const storageRef = ref(storage, `authImages/${uniqueImageId}`);
+    await uploadBytes(storageRef, file);
+
+    const photoUrl = await getDownloadURL(
+      ref(storage, `authImages/${uniqueImageId}`)
+    );
+    return photoUrl;
+  };
+
+  const showPassword = () => {
+    if (password === "" && secure) return;
+    if (secure) {
+      setSecure(false);
+      setSecureText("Скрыть");
+      return;
+    }
+    setSecure(true);
+    setSecureText("Показать");
+  };
+
+  const loadPhoto = async () => {
+    try {
+      const res = await DocumentPicker.pickSingle({
+        type: [DocumentPicker.types.allFiles],
+      });
+      setPhoto(res.uri);
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+        console.log("error -----", err);
+      } else {
+        console.log("DocumentPicker error", err);
+      }
+    }
+  };
+
+  const deletePhoto = () => {
+    setPhoto(null);
+  };
+
+  const onLinkClick = () => {
+    if (error) {
+      dispatch(changeError());
+    }
+    navigation.navigate("Login");
   };
 
   return (
-    <TouchableWithoutFeedback onPress={keyboardHide}>
+    <TouchableWithoutFeedback
+      onPress={() => {
+        setShowKeyboard(false);
+        Keyboard.dismiss();
+      }}
+    >
       <View style={styles.container}>
         <ImageBackground
           style={styles.image}
-          source={require("../../assets/images/Photo-BG.jpg")}
+          source={require("../../assets/images/Photo-BG.png")}
         >
           <View
             style={{
               ...styles.form,
-              paddingBottom:
-                Platform.OS == "android" && isShowKeyboard ? 0 : 78,
+              paddingBottom: Platform.OS == "android" && showKeyboard ? 0 : 78,
             }}
           >
             <View style={styles.photoBlock}>
-              <View style={styles.img}>
-                <AntDesign
-                  name="pluscircleo"
-                  size={24}
-                  color="#FF6C00"
-                  style={styles.btnLoad}
-                />
-              </View>
+              {photo ? (
+                <>
+                  <Image source={{ uri: photo }} style={styles.img} />
+                  <AntDesign
+                    name="closecircleo"
+                    size={24}
+                    color="#BDBDBD"
+                    style={styles.btnLoad}
+                    onPress={deletePhoto}
+                  />
+                </>
+              ) : (
+                <View style={styles.img}>
+                  <AntDesign
+                    name="pluscircleo"
+                    size={24}
+                    color="#FF6C00"
+                    onPress={loadPhoto}
+                    style={styles.btnLoad}
+                  />
+                </View>
+              )}
             </View>
             <Text style={styles.headerTitle}>Регистрация</Text>
             <TextInput
               placeholder="Логин"
-              value={state.login}
-              onChangeText={(value) =>
-                setstate((prevState) => ({ ...prevState, login: value }))
-              }
+              value={login}
+              onChangeText={loginHandler}
               placeholderTextColor="#BDBDBD"
               selectionColor="#212121"
               onBlur={() => {
@@ -73,16 +170,14 @@ export default function RegistrationScreen({ navigation }) {
               }}
               onFocus={() => {
                 setIsActiveLogin(true);
-                setIsShowKeyboard(true);
+                setShowKeyboard(true);
               }}
               style={isActiveLogin ? styles.inputIsActive : styles.input}
             />
             <TextInput
               placeholder="Адрес электронной почты"
-              value={state.email}
-              onChangeText={(value) =>
-                setstate((prevState) => ({ ...prevState, email: value }))
-              }
+              value={email}
+              onChangeText={emailHandler}
               placeholderTextColor="#BDBDBD"
               selectionColor="#212121"
               onBlur={() => {
@@ -90,7 +185,7 @@ export default function RegistrationScreen({ navigation }) {
               }}
               onFocus={() => {
                 setIsActiveEmail(true);
-                setIsShowKeyboard(true);
+                setShowKeyboard(true);
               }}
               style={isActiveEmail ? styles.inputIsActive : styles.input}
             />
@@ -98,68 +193,72 @@ export default function RegistrationScreen({ navigation }) {
               style={{
                 ...styles.lastInput,
                 marginBottom:
-                  Platform.OS == "android" && isShowKeyboard ? 32 : 43,
+                  Platform.OS == "android" && showKeyboard ? 32 : 43,
               }}
             >
               <TextInput
                 placeholder="Пароль"
-                value={state.password}
-                onChangeText={(value) =>
-                  setstate((prevState) => ({ ...prevState, password: value }))
-                }
+                value={password}
+                onChangeText={passwordHandler}
                 placeholderTextColor="#BDBDBD"
                 selectionColor="#212121"
-                secureTextEntry={true}
+                secureTextEntry={secure}
                 onBlur={() => {
                   setIsActivePassword(false);
                 }}
                 onFocus={() => {
                   setIsActivePassword(true);
-                  setIsShowKeyboard(true);
+                  setShowKeyboard(true);
                 }}
                 style={
                   isActivePassword
                     ? {
                         ...styles.inputIsActive,
                         marginBottom:
-                          Platform.OS == "ios" && isShowKeyboard ? 165 : 0,
+                          Platform.OS == "ios" && showKeyboard ? 165 : 0,
                       }
                     : {
                         ...styles.input,
                         marginBottom:
-                          Platform.OS == "ios" && isShowKeyboard ? 165 : 0,
+                          Platform.OS == "ios" && showKeyboard ? 165 : 0,
                       }
                 }
               />
-              <TouchableOpacity activeOpacity={0.8} style={styles.btnShowHide}>
-                <Text style={styles.titleShowHide}>Показать</Text>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={showPassword}
+                style={styles.btnShowHide}
+              >
+                <Text style={styles.titleShowHide}>{secureText}</Text>
               </TouchableOpacity>
             </View>
             <View
               style={{
                 display:
-                  Platform.OS == "android" && isShowKeyboard ? "none" : "flex",
+                  Platform.OS == "android" && showKeyboard ? "none" : "flex",
               }}
             >
-              <TouchableOpacity activeOpacity={0.8} style={styles.btn}>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                style={styles.btn}
+                onPress={registerHandler}
+              >
                 <Text style={styles.btnTitle}>Зарегистрироваться</Text>
               </TouchableOpacity>
               <View style={styles.wrapper}>
                 <Text style={styles.authLink}>Уже есть аккаунт? </Text>
-                <TouchableOpacity
-                  activeOpacity={0.7}
-                  onPress={() => navigation.navigate("Login")}
-                >
+                <TouchableOpacity activeOpacity={0.7} onPress={onLinkClick}>
                   <Text style={styles.authLink}>Войти</Text>
                 </TouchableOpacity>
               </View>
             </View>
+            {isLoading && <Loader />}
           </View>
         </ImageBackground>
       </View>
     </TouchableWithoutFeedback>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -173,10 +272,12 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     width: "100%",
+    // alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#fff",
     borderTopStartRadius: 25,
     borderTopEndRadius: 25,
+
     paddingTop: 92,
     paddingHorizontal: 16,
   },
@@ -187,10 +288,12 @@ const styles = StyleSheet.create({
     lineHeight: 35,
     letterSpacing: 0.01,
     color: "#212121",
+
     marginBottom: 33,
   },
   input: {
     height: 50,
+
     backgroundColor: "#F6F6F6",
     color: "#212121",
     borderRadius: 8,
@@ -201,6 +304,7 @@ const styles = StyleSheet.create({
   },
   inputIsActive: {
     height: 50,
+
     backgroundColor: "#FFF",
     color: "#212121",
     borderRadius: 8,
@@ -267,3 +371,5 @@ const styles = StyleSheet.create({
     bottom: 18,
   },
 });
+
+export default RegistrationScreen;

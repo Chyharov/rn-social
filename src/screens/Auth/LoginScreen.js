@@ -1,42 +1,84 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   StyleSheet,
-  Text,
   View,
-  ImageBackground,
   TextInput,
-  TouchableOpacity,
+  TouchableWithoutFeedback,
   Platform,
   Keyboard,
-  TouchableWithoutFeedback,
+  TouchableOpacity,
+  Text,
+  ImageBackground,
 } from "react-native";
-
-const initialState = {
-  email: "",
-  password: "",
-};
+import { changeError } from "../../redux/auth/authSlice";
+import { loginUser } from "../../redux/auth/authOperations";
+import { getAuthError, getAuthLoading } from "../../redux/auth/authSelectors";
+import Loader from "../../components/Loader";
 
 export default function LoginScreen({ navigation }) {
-  console.log(Platform.OS);
-  // console.log("navigation", navigation);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-  const [state, setstate] = useState(initialState);
   const [isActiveEmail, setIsActiveEmail] = useState(false);
+  const [email, setEmail] = useState("");
   const [isActivePassword, setIsActivePassword] = useState(false);
+  const [password, setPassword] = useState("");
+  const [secureText, setSecureText] = useState("Показать");
+  const [secure, setSecure] = useState(true);
 
-  const keyboardHide = () => {
-    setIsShowKeyboard(false);
-    Keyboard.dismiss();
-    console.log(state);
-    setstate(initialState);
+  const dispatch = useDispatch();
+  const error = useSelector(getAuthError);
+  const isLoading = useSelector(getAuthLoading);
+
+  useEffect(() => {
+    if (!error) return;
+    alert(error);
+  }, [error]);
+
+  const emailHandler = (text) => setEmail(text);
+  const passwordHandler = (text) => setPassword(text);
+  const reset = () => {
+    setEmail("");
+    setPassword("");
+  };
+
+  const loginHandler = () => {
+    if (!email || !password) {
+      alert("Введите адрес электронной почты и пароль");
+      return;
+    }
+    dispatch(loginUser({ email, password }));
+    reset();
+  };
+
+  const showPassword = () => {
+    if (password === "" && secure) return;
+    if (secure) {
+      setSecure(false);
+      setSecureText("Скрыть");
+      return;
+    }
+    setSecure(true);
+    setSecureText("Показать");
+  };
+
+  const onLinkClick = () => {
+    if (error) {
+      dispatch(changeError());
+    }
+    navigation.navigate("Register");
   };
 
   return (
-    <TouchableWithoutFeedback onPress={keyboardHide}>
+    <TouchableWithoutFeedback
+      onPress={() => {
+        setIsShowKeyboard(false);
+        Keyboard.dismiss();
+      }}
+    >
       <View style={styles.container}>
         <ImageBackground
           style={styles.image}
-          source={require("../../assets/images/Photo-BG.jpg")}
+          source={require("../../assets/images/Photo-BG.png")}
         >
           <View
             style={{
@@ -47,19 +89,17 @@ export default function LoginScreen({ navigation }) {
           >
             <Text style={styles.headerTitle}>Войти</Text>
             <TextInput
-              style={isActiveEmail ? styles.inputIsActive : styles.input}
               placeholder="Адрес электронной почты"
+              value={email}
+              onChangeText={emailHandler}
               placeholderTextColor="#BDBDBD"
               selectionColor="#212121"
               onBlur={() => setIsActiveEmail(false)}
               onFocus={() => {
-                setIsShowKeyboard(true);
                 setIsActiveEmail(true);
+                setIsShowKeyboard(true);
               }}
-              value={state.email}
-              onChangeText={(value) =>
-                setstate((prevState) => ({ ...prevState, email: value }))
-              }
+              style={isActiveEmail ? styles.inputIsActive : styles.input}
             />
             <View
               style={{
@@ -69,6 +109,17 @@ export default function LoginScreen({ navigation }) {
               }}
             >
               <TextInput
+                placeholder="Пароль"
+                value={password}
+                onChangeText={passwordHandler}
+                placeholderTextColor="#BDBDBD"
+                selectionColor="#212121"
+                secureTextEntry={secure}
+                onBlur={() => setIsActivePassword(false)}
+                onFocus={() => {
+                  setIsActivePassword(true);
+                  setIsShowKeyboard(true);
+                }}
                 style={
                   isActivePassword
                     ? {
@@ -82,22 +133,13 @@ export default function LoginScreen({ navigation }) {
                           Platform.OS == "ios" && isShowKeyboard ? 100 : 0,
                       }
                 }
-                placeholder="Пароль"
-                placeholderTextColor="#BDBDBD"
-                selectionColor="#212121"
-                secureTextEntry={true}
-                onBlur={() => setIsActivePassword(false)}
-                onFocus={() => {
-                  setIsShowKeyboard(true);
-                  setIsActivePassword(true);
-                }}
-                value={state.password}
-                onChangeText={(value) =>
-                  setstate((prevState) => ({ ...prevState, password: value }))
-                }
               />
-              <TouchableOpacity activeOpacity={0.8} style={styles.btnShowHide}>
-                <Text style={styles.titleShowHide}>Показать</Text>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={showPassword}
+                style={styles.btnShowHide}
+              >
+                <Text style={styles.titleShowHide}>{secureText}</Text>
               </TouchableOpacity>
             </View>
             <View
@@ -109,21 +151,18 @@ export default function LoginScreen({ navigation }) {
               <TouchableOpacity
                 activeOpacity={0.8}
                 style={styles.btn}
-                // onPress={keyboardHide}
-                onPress={() => navigation.navigate("Home")}
+                onPress={loginHandler}
               >
                 <Text style={styles.btnTitle}>Войти</Text>
               </TouchableOpacity>
               <View style={styles.wrapper}>
                 <Text style={styles.authLink}>Нет аккаунта? </Text>
-                <TouchableOpacity
-                  activeOpacity={0.7}
-                  onPress={() => navigation.navigate("Registration")}
-                >
+                <TouchableOpacity activeOpacity={0.7} onPress={onLinkClick}>
                   <Text style={styles.authLink}>Зарегистрироваться</Text>
                 </TouchableOpacity>
               </View>
             </View>
+            {isLoading && <Loader />}
           </View>
         </ImageBackground>
       </View>

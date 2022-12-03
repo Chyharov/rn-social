@@ -14,4 +14,8 @@ HW 04
 HW05
 ![Hw05CreateScreen](https://user-images.githubusercontent.com/102535915/205254611-bbd98681-5290-4c04-8b51-a2c178b98524.jpg)
 
-HW06
+HW06!
+[Hw06ReduxAndFirebase](https://user-images.githubusercontent.com/102535915/205429783-629b0c5c-8cf5-4c24-9fe1-96aa8729bda9.jpg)
+
+HW07
+![Hw07deployOnExpoServer](https://user-images.githubusercontent.com/102535915/205429804-58d0f122-eac5-4254-84d0-92c2e93b6f57.jpg)

@@ -92,7 +92,9 @@ const Post = ({ item, navigation }) => {
             color="#BDBDBD"
             onPress={navigateToMap}
           />
-          <Text style={styles.placeText}>{place}</Text>
+          <Text onPress={navigateToMap} style={styles.placeText}>
+            {place}
+          </Text>
         </View>
       </View>
     </View>

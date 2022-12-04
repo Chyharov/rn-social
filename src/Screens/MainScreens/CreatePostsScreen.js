@@ -11,11 +11,10 @@ import {
   TextInput,
   Platform,
 } from "react-native";
-import { Camera } from "expo-camera";
+import { Camera, CameraType } from "expo-camera";
 import * as Location from "expo-location";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { EvilIcons } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
+import { EvilIcons, Ionicons, AntDesign } from "@expo/vector-icons";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { collection, addDoc } from "firebase/firestore";
 import { db, storage } from "../../firebase/config";
@@ -30,20 +29,27 @@ const CreatePostsScreen = ({ navigation }) => {
   const [location, setLocation] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showKeyboard, setShowKeyboard] = useState(false);
+  const [type, setType] = useState(CameraType.back);
   const userId = useSelector(getUserId);
 
-  // useEffect(() => {
-  //   (async () => {
-  //     let { status } = await Location.requestForegroundPermissionsAsync();
-  //     if (status !== "granted") {
-  //       console.log("Permission to access location was denied");
-  //       return;
-  //     }
-  //     const locationRes = await Location.getCurrentPositionAsync({});
-  //     console.log("location", locationRes);
-  //     setLocation(locationRes.coords);
-  //   })();
-  // }, []);
+  function toggleCameraType() {
+    setType((current) =>
+      current === CameraType.back ? CameraType.front : CameraType.back
+    );
+  }
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.log("Permission to access location was denied");
+        return;
+      }
+      const locationRes = await Location.getCurrentPositionAsync({});
+      console.log("location", locationRes);
+      setLocation(locationRes.coords);
+    })();
+  }, []);
 
   const titleHandler = (text) => setTitle(text);
   const placeHandler = (text) => setPlace(text);
@@ -55,7 +61,7 @@ const CreatePostsScreen = ({ navigation }) => {
 
   const publishPost = async () => {
     if (!title || !place) {
-      alert("Введите название фото и локацию");
+      alert("Для публикации, нужно вести название и место");
       return;
     }
     setIsLoading(true);
@@ -109,14 +115,26 @@ const CreatePostsScreen = ({ navigation }) => {
       <View style={styles.container}>
         <View style={styles.cameraContainer}>
           {!photo && (
-            <Camera style={styles.camera} ref={setCamera}>
+            <Camera style={styles.camera} type={type} ref={setCamera}>
               <TouchableOpacity
-                onPress={takePhoto}
-                style={styles.iconContainer}
-                enabled={photo ? "false" : "true"}
+                style={styles.reverseCamera}
+                onPress={toggleCameraType}
               >
-                <FontAwesome5 name="camera" size={20} color="#BDBDBD" />
+                <Ionicons
+                  name="ios-camera-reverse-outline"
+                  size={30}
+                  color="#fff"
+                />
               </TouchableOpacity>
+              <View style={styles.containerFlipCamera}>
+                <TouchableOpacity
+                  onPress={takePhoto}
+                  style={styles.iconContainer}
+                  enabled={photo ? "false" : "true"}
+                >
+                  <FontAwesome5 name="camera" size={20} color="#BDBDBD" />
+                </TouchableOpacity>
+              </View>
             </Camera>
           )}
           {photo && (
@@ -225,7 +243,11 @@ const styles = StyleSheet.create({
     paddingTop: 32,
     paddingBottom: 34,
   },
-  background: { flex: 1, justifyContent: "center", alignItems: "center" },
+  background: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   cameraContainer: {
     height: 240,
     borderRadius: 8,
@@ -235,6 +257,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   camera: {
+    position: "relative",
     width: "100%",
     height: "100%",
     alignItems: "center",
@@ -265,7 +288,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 19,
   },
-  blockDelete: { width: "100%", alignItems: "center" },
+  blockDelete: {
+    width: "100%",
+    alignItems: "center",
+  },
   btnDelete: {
     width: 70,
     height: 40,
@@ -283,10 +309,18 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     marginBottom: 16,
   },
-  iconLocation: { position: "absolute", left: 0, top: 13 },
-  lottie: {
-    width: 300,
-    height: 300,
+  iconLocation: {
+    position: "absolute",
+    left: 0,
+    top: 13,
+  },
+  containerFlipCamera: {
+    padding: 30,
+  },
+  reverseCamera: {
+    position: "absolute",
+    right: 20,
+    top: 10,
   },
 });
 

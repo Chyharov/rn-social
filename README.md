@@ -20,4 +20,3 @@ HW06
 HW07
 ![Hw07deployOnExpoServer](https://user-images.githubusercontent.com/102535915/205429845-75200e31-2232-41a2-901b-cf0a5459f3c4.jpg)
 https://expo.dev/@chyharov/rn-social?serviceType=classic&distribution=expo-go
-

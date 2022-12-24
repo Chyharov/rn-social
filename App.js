@@ -6,6 +6,7 @@ import AppLoading from "expo-app-loading";
 
 import { Provider } from "react-redux";
 import { store } from "./src/redux/store";
+import { useRoute } from "./router";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -26,6 +27,7 @@ const loadFonts = async () => {
 
 const App = () => {
   const [isReady, setIsReady] = useState(false);
+  const routing = useRoute(false);
 
   if (!isReady) {
     return (
@@ -39,25 +41,7 @@ const App = () => {
 
   return (
     <Provider store={store}>
-      <NavigationContainer>
-        <AuthStack.Navigator>
-          <AuthStack.Screen
-            options={{ headerShown: false }}
-            name="Login"
-            component={LoginScreen}
-          />
-          <AuthStack.Screen
-            options={{ headerShown: false }}
-            name="Registration"
-            component={RegistrationScreen}
-          />
-          <AuthStack.Screen
-            options={{ headerShown: false }}
-            name="Home"
-            component={Home}
-          />
-        </AuthStack.Navigator>
-      </NavigationContainer>
+      <NavigationContainer>{routing}</NavigationContainer>
     </Provider>
   );
 };

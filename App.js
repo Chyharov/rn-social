@@ -9,8 +9,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 const AuthStack = createStackNavigator();
 
-import LoginScreen from "./src/screens/auth/LoginScreen";
-import RegistrationScreen from "./src/screens/auth/RegistrationScreen";
+import LoginScreen from "./src/Screens/Auth/LoginScreen";
+import RegistrationScreen from "./src/Screens/Auth/RegistrationScreen";
 import Home from "./src/components/Home";
 
 const loadFonts = async () => {

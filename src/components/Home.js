@@ -7,9 +7,9 @@ import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 
-import PostsScreen from "../screens/mainScreen/PostsScreen";
-import CreatePostsScreen from "../screens/mainScreen/CreatePostsScreen";
-import ProfileScreen from "../screens/mainScreen/ProfileScreen";
+import PostsScreen from "../Screens/mainScreen/PostsScreen";
+import CreatePostsScreen from "../Screens/mainScreen/CreatePostsScreen";
+import ProfileScreen from "../Screens/mainScreen/ProfileScreen";
 
 const MainTab = createBottomTabNavigator();
 

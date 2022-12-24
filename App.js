@@ -4,6 +4,8 @@ import {} from "react-native";
 import * as Font from "expo-font";
 import AppLoading from "expo-app-loading";
 
+import { Provider } from "react-redux";
+
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
